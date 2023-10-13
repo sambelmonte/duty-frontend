@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import useGetDutyService from './api/Api';
 import './App.css';
+import Task from './Task';
+import { TaskMode } from './types/Duty';
 
 function App() {
+  const getService = useGetDutyService();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Task
+        taskId=''
+        name=''
+        mode={TaskMode.ADD}
+      ></Task>
+      <hr />
+
+      {getService.status === 'loading' && <div>Loading...</div>}
+      {getService.status === 'loaded' &&
+        getService.payload.map(duty => (
+          <Task
+            taskId={duty.id}
+            name={duty.name}
+            mode={TaskMode.LOCKED}
+          ></Task>
+        ))
+      }
     </div>
-  );
+  )
 }
 
 export default App;
